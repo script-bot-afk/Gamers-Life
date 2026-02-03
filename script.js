@@ -32,7 +32,7 @@ function morning() {
         { text: "Go to the homeless shelter (+Energy, -$1)", action: () => { stats.energy += 3; stats.money -= 1; nextPhase(); } },
         { text: "Beg on the street (chance to earn money, -Energy)", action: () => {
             stats.energy -= 2;
-            stats.money += Math.floor(Math.random() * 6);
+            stats.money += Math.floor(Math.random() * 6); // $0-$5
             nextPhase();
         }}
     ];
@@ -42,17 +42,29 @@ function morning() {
 function afternoon() {
     const story = "Afternoon: What will you do?";
     const choices = [
-        { text: "Spend money on food (+Hunger, -$2)", action: () => {
-            if (stats.money >= 2) { stats.hunger += 3; stats.money -= 2; } 
-            else { stats.hunger -= 2; alert("Not enough money to buy food!"); }
-            nextPhase();
-        }},
-        { text: "Gamble (risk money)", action: () => {
-            let gamble = Math.floor(Math.random() * 11) - 5; // -5 to +5
-            stats.money += gamble;
-            alert(gamble >= 0 ? `You won $${gamble}!` : `You lost $${-gamble}!`);
-            nextPhase();
-        }}
+        { 
+            text: "Spend money on food (+Hunger, -$2)", 
+            action: () => {
+                if (stats.money >= 2) { 
+                    stats.hunger += 3; 
+                    stats.money -= 2; 
+                } else { 
+                    stats.hunger -= 2; 
+                    alert("Not enough money to buy food!"); 
+                }
+                nextPhase();
+            } 
+        },
+        { 
+            text: "Look for spare change (+$0–$5, -Energy)", 
+            action: () => {
+                stats.energy -= 2;
+                let earned = Math.floor(Math.random() * 6); // $0-$5
+                stats.money += earned;
+                alert(`You found $${earned} in spare change!`);
+                nextPhase();
+            }
+        }
     ];
     showPhase(story, choices);
 }
